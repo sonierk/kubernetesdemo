@@ -12,3 +12,9 @@ docker push localhost:5000/explorecalifornia.com
 kubectl apply -f deployment.yaml
 kubectl get pods -l app=explorecalifornia.com
 kubectl port-forward deployment/explorecalifornia.com 8080:80
+kubectl create service clusterip --dry-run=client --tcp=80:80 explorecalifornia.com --output=yaml > service.yaml
+kubectl apply -f service.yaml
+kubectl get all -l app=explorecalifornia.com
+kubectl get all -l app=explorecalifornia.com
+kubectl describe service explorecalifornia-svc
+kubectl port-forward service/explorecalifornia-svc 8080:80
