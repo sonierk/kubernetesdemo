@@ -4,3 +4,11 @@ kubectl version --client
 kubectl get pods --namespace kube-system
 docker run --name local-registry -d --restart=always -p 5000:5000 registry:2
 curl -L http://localhost:5000/v2
+./kind delete cluster --name explorecalifornia.com
+./kind get clusters
+kubectl create deployment --dry-run=client --image localhost:5000/explorecalifornia.com explorecalifornia.com --output=yaml
+docker tag explorecalifornia.com localhost:5000/explorecalifornia.com
+docker push localhost:5000/explorecalifornia.com
+kubectl apply -f deployment.yaml
+kubectl get pods -l app=explorecalifornia.com
+kubectl port-forward deployment/explorecalifornia.com 8080:80

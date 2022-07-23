@@ -14,7 +14,7 @@ install_kind:
 		./kind --version
 
 create_kind_cluster: install_kind create_docker_registry
-	./kind create cluster --name explorecalifornia.com && \
+	./kind create cluster --name explorecalifornia.com --config ./kind_config.yaml || true && \
 		kubectl get nodes
 
 create_docker_registry:
@@ -22,3 +22,19 @@ create_docker_registry:
 		then echo "---> local-registry already created; skipping"; \
 		else docker run --name local-registry -d --restart=always -p 5000:5000 registry:2; \
 		fi
+
+connect_registry_to_kind_network:
+	docker network connect kind local-registry || true
+
+connect_registry_to_kind: connect_registry_to_kind_network
+	kubectl apply -f ./kind_configmap.yaml
+
+create_kind_cluster_with_registry:
+	$(MAKE) create_kind_cluster && $(MAKE) connect_registry_to_kind
+
+
+delete_kind_cluster: delete_docker_registry
+	./kind delete cluster --name explorecalifornia.com
+
+delete_docker_registry:
+	docker stop local-registry && docker rm local-registry
