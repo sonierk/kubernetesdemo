@@ -18,3 +18,11 @@ kubectl get all -l app=explorecalifornia.com
 kubectl get all -l app=explorecalifornia.com
 kubectl describe service explorecalifornia-svc
 kubectl port-forward service/explorecalifornia-svc 8080:80
+kubectl create ingress explorecalifornia.com  --rule=explorecalifornia.com/=explorecalifornia-svc:80 --dry-run=client --output=yaml > ingress.yaml
+kubectl apply -f ingress.yaml 
+kubectl get ingress explorecalifornia.com
+./kind delete cluster --name=explorecalifornia.com
+make create_kind_cluster_with_registr
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+kubectl get all -n ingress-nginx
+

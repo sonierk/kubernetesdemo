@@ -13,7 +13,7 @@ install_kind:
 	curl -L --output ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.14.0/kind-linux-amd64 && \
 		./kind --version
 
-create_kind_cluster: install_kind create_docker_registry
+create_kind_cluster: install_kind
 	./kind create cluster --name explorecalifornia.com --config ./kind_config.yaml || true && \
 		kubectl get nodes
 
@@ -29,7 +29,7 @@ connect_registry_to_kind_network:
 connect_registry_to_kind: connect_registry_to_kind_network
 	kubectl apply -f ./kind_configmap.yaml
 
-create_kind_cluster_with_registry:
+create_kind_cluster_with_registry: create_docker_registry
 	$(MAKE) create_kind_cluster && $(MAKE) connect_registry_to_kind
 
 

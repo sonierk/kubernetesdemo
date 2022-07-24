@@ -16,7 +16,7 @@ spec:
         app: explorecalifornia.com
     spec:
       containers:
-      - image: sonierk/kubernetesdemo
+      - image: localhost:5000/explorecalifornia.com
         name: explorecalifornia-com-mttdq
         resources: {}
 status: {}
